@@ -13,7 +13,7 @@ public protocol SwiftWebVCDelegate: class {
     func didFinishLoading(success: Bool)
 }
 
-public class SwiftWebVC: UIViewController {
+open class SwiftWebVC: UIViewController {
     
     public weak var delegate: SwiftWebVCDelegate?
     var storedStatusColor: UIBarStyle?
@@ -23,7 +23,7 @@ public class SwiftWebVC: UIViewController {
     
     lazy var backBarButtonItem: UIBarButtonItem =  {
         var tempBackBarButtonItem = UIBarButtonItem(image: SwiftWebVC.bundledImage(named: "SwiftWebVCBack"),
-                                                    style: UIBarButtonItemStyle.plain,
+                                                    style: UIBarButtonItem.Style.plain,
                                                     target: self,
                                                     action: #selector(SwiftWebVC.goBackTapped(_:)))
         tempBackBarButtonItem.width = 18.0
@@ -33,7 +33,7 @@ public class SwiftWebVC: UIViewController {
     
     lazy var forwardBarButtonItem: UIBarButtonItem =  {
         var tempForwardBarButtonItem = UIBarButtonItem(image: SwiftWebVC.bundledImage(named: "SwiftWebVCNext"),
-                                                       style: UIBarButtonItemStyle.plain,
+                                                       style: UIBarButtonItem.Style.plain,
                                                        target: self,
                                                        action: #selector(SwiftWebVC.goForwardTapped(_:)))
         tempForwardBarButtonItem.width = 18.0
@@ -42,7 +42,7 @@ public class SwiftWebVC: UIViewController {
     }()
     
     lazy var refreshBarButtonItem: UIBarButtonItem = {
-        var tempRefreshBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.refresh,
+        var tempRefreshBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.refresh,
                                                        target: self,
                                                        action: #selector(SwiftWebVC.reloadTapped(_:)))
         tempRefreshBarButtonItem.tintColor = self.buttonColor
@@ -50,7 +50,7 @@ public class SwiftWebVC: UIViewController {
     }()
     
     lazy var stopBarButtonItem: UIBarButtonItem = {
-        var tempStopBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.stop,
+        var tempStopBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.stop,
                                                     target: self,
                                                     action: #selector(SwiftWebVC.stopTapped(_:)))
         tempStopBarButtonItem.tintColor = self.buttonColor
@@ -58,7 +58,7 @@ public class SwiftWebVC: UIViewController {
     }()
     
     lazy var actionBarButtonItem: UIBarButtonItem = {
-        var tempActionBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action,
+        var tempActionBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.action,
                                                       target: self,
                                                       action: #selector(SwiftWebVC.actionButtonTapped(_:)))
         tempActionBarButtonItem.tintColor = self.buttonColor
@@ -66,20 +66,21 @@ public class SwiftWebVC: UIViewController {
     }()
     
     
-    lazy var webView: WKWebView = {
+    lazy public var webView: WKWebView = {
         var tempWebView = WKWebView(frame: UIScreen.main.bounds)
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
         return tempWebView;
     }()
     
-    var request: URLRequest!
+    public var request: URLRequest!
     
     var navBarTitle: UILabel!
     
-    var sharingEnabled = true
+    public var sharingEnabled = true
     
     ////////////////////////////////////////////////
+    
     
     deinit {
         webView.stopLoading()
@@ -106,20 +107,27 @@ public class SwiftWebVC: UIViewController {
         self.request = aRequest
     }
     
-    func loadRequest(_ request: URLRequest) {
+    public func loadRequest(_ request: URLRequest) {
         webView.load(request)
+    }
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     ////////////////////////////////////////////////
     // View Lifecycle
     
-    override public func loadView() {
-        view = webView
-        loadRequest(request)
-    }
+   
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
+        self.view.addSubview(webView)
+        loadRequest(request)
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -173,8 +181,8 @@ public class SwiftWebVC: UIViewController {
         
         let refreshStopBarButtonItem: UIBarButtonItem = webView.isLoading ? stopBarButtonItem : refreshBarButtonItem
         
-        let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.fixedSpace, target: nil, action: nil)
-        let flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
+        let flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
         
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
             
