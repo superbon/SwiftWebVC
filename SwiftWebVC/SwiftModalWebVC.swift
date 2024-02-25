@@ -11,7 +11,7 @@ import UIKit
 public class SwiftModalWebVC: UINavigationController {
     
     public enum SwiftModalWebVCTheme {
-        case lightBlue, lightBlack, dark
+        case lightBlue, lightBlack, dark, rentr
     }
     public enum SwiftModalWebVCDismissButtonStyle {
         case arrow, cross
@@ -66,7 +66,14 @@ public class SwiftModalWebVC: UINavigationController {
             webViewController.buttonColor = UIColor.white
             webViewController.titleColor = UIColor.groupTableViewBackground
             UINavigationBar.appearance().barStyle = UIBarStyle.black
+        case .rentr:
+            doneButton.tintColor = UIColor.white
+            webViewController.buttonColor = UIColor(red: 0.17, green: 0.75, blue: 0.58, alpha: 1.00)
+            webViewController.titleColor = UIColor.white
+            UINavigationBar.appearance().barStyle = UIBarStyle.default
         }
+        
+        
         
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
             webViewController.navigationItem.leftBarButtonItem = doneButton
